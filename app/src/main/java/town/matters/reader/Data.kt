@@ -56,7 +56,7 @@ class MattersApi(
         token: String? = sessionToken.get()): JSONObject = withContext(Dispatchers.IO) {
         val payload = JSONObject().put("query", document).put("variables", variables).toString()
         val request = Request.Builder().url(endpoint)
-            .header("Accept", "application/json").header("User-Agent", "MattersReaderAndroid/1.0.0")
+            .header("Accept", "application/json").header("User-Agent", "TowneeAndroid/1.0.1")
             .apply { if (!token.isNullOrBlank()) header("x-access-token", token) }
             .post(payload.toRequestBody("application/json; charset=utf-8".toMediaType())).build()
         execute(request).use { response ->
