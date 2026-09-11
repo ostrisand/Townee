@@ -416,7 +416,7 @@ private fun SettingsScreen(state: ReaderState, model: ReaderModel) {
         }
         item {
             HorizontalDivider()
-            LocalizedText("Townee 1.0.1", Modifier.padding(top = 20.dp), style = MaterialTheme.typography.labelLarge)
+            LocalizedText("Townee 1.0.2", Modifier.padding(top = 20.dp), style = MaterialTheme.typography.labelLarge)
             LocalizedText("非官方 Android 阅读客户端\n基于公开接口提供内容，文章版权归原作者所有。\n会话通过 Android Keystore 加密保存在本机，不保存密码。无分析与广告 SDK。卸载会清除会话与书架。",
                 Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }

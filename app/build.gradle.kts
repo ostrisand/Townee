@@ -10,14 +10,26 @@ android {
         applicationId = "town.matters.reader"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.0.1"
+        versionCode = 5
+        versionName = "1.0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }
     signingConfigs {
         getByName("debug") {
             providers.gradleProperty("debugKeystore").orNull?.let { storeFile = file(it) }
+        }
+        create("release") {
+            System.getenv("TOWNEE_KEYSTORE")?.let { storeFile = file(it) }
+            storePassword = System.getenv("TOWNEE_STORE_PASSWORD")
+            keyAlias = "townee"
+            keyPassword = System.getenv("TOWNEE_KEY_PASSWORD")
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

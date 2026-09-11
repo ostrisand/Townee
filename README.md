@@ -1,5 +1,8 @@
 # Townee · Android
 
+当前版本 **1.0.2** 使用专用发布密钥签名并关闭调试模式。[正式签名构建说明](RELEASE-SIGNING.md)。旧调试版需卸载后安装，卸载会清除本地数据。正式签名不保证消除 Play Protect 提示。
+
+
 基于 Matters 公开 GraphQL 接口实现的非官方 Android 阅读客户端。Kotlin、Jetpack Compose、Material Design 3，最低 Android 8.0（API 26）。
 
 ## 已实现的代码
@@ -74,7 +77,7 @@ API 使用官方 schema 中的 `channels`、`channel`、`search`、`article` 及
 - [Android Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [AGP 8.9 兼容性](https://developer.android.com/build/releases/agp-8-9-0-release-notes)
 
-## 验证状态与后续验收
+## 历史验证状态与后续验收
 
 2026-09-11 已在项目工作目录配置 JDK 17、Gradle 8.11.1 和 Android SDK 35，完成实际构建。新版安装包为Release 附件中的 `Matters-1.0.0-debug.apk`，适用于 Android 8.0 及以上。沿用 0.1.0 的包名和调试签名，versionCode 升至 3，可直接覆盖安装。
 

@@ -6,3 +6,7 @@ local.properties
 **/build/
 *.jks
 *.keystore
+
+private-signing/
+signing-private.json
+keystore.properties
