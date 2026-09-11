@@ -31,9 +31,3 @@
 - `AccountTest.kt`、`NavigationLanguageTest.kt`：登录失败、过期恢复、离线退出、凭据传递、重定向保护、加密完整性、频道和繁简转换测试。
 
 API 使用官方 schema 中的 `channels`、`channel`、`search`、`article` 及 `viewer.recommendation`；频道支持 TopicChannel、CurationChannel 和 WritingChallenge。会话使用官方 `x-access-token` 请求头，仅发送到 API；接口请求禁止自动重定向。端点返回的权限或服务错误会显示重试状态，不使用虚构文章填充列表。收藏保存正文的当时版本，重新打开收藏不会自动更新远端内容。官网 `userLogout` 只清除该请求的 Cookie，不撤销其他设备会话；本机退出会删除密文、密钥和内存令牌。
-
-
-
-构建成功后应在手机及平板验证：频道和搜索分页、断网重试、快速切换频道、返回阅读列表、收藏后杀进程及离线打开、长文章与图片、200% 字号、TalkBack、深浅主题和旋转屏幕。当前导航页签通过 saved state 恢复，但进程被系统杀死后不恢复正在阅读的具体文章。
-
-本项目没有复用官方品牌图标，启动图标为独立绘制的字母 M。文章内容与图片版权归各原作者。对外发布前请自行确认名称和图标的使用许可，并根据发布时的 Google Play 要求补齐隐私说明及政策适配。
