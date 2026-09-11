@@ -1,11 +1,8 @@
 # Townee · Android
 
-当前版本 **1.0.0** 使用专用发布密钥签名并关闭调试模式。[正式签名构建说明](RELEASE-SIGNING.md)。旧调试版需卸载后安装，卸载会清除本地数据。正式签名不保证消除 Play Protect 提示。
-
-
 基于 Matters 公开 GraphQL 接口实现的非官方 Android 阅读客户端。Kotlin、Jetpack Compose、Material Design 3，最低 Android 8.0（API 26）。
 
-## 已实现的代码
+## 已实现的功能
 
 - 账户：原生邮箱密码登录、头像昵称、会话恢复、资料刷新和本机退出；仅通过官方 `emailLogin`、`viewer`、`userLogout` 接口工作。
 - 首页：按照网页顺序显示关注、精选、热文、闲聊、活动／主题频道和“还有”；点击顶部菜单按钮或频道名称展开侧栏。
@@ -19,40 +16,6 @@
 - 安全保存：密码只在当前请求内使用，不写入 SavedInstanceState、偏好设置或日志；会话以 AES-256-GCM 加密，密钥保存在 Android Keystore，密文放在不参与备份的应用目录。
 
 这是非官方阅读版客户端。原生登录支持已设置密码的 Matters 邮箱账号；注册、找回密码及第三方登录需前往官网。写作、通知、评论和赞赏在浏览器 Custom Tabs 中使用 Matters 网页完成；浏览器会话与原生会话相互独立，本地收藏也不会同步至 Matters。退出本机账户后保留本地书架。HTML 被转换为原生阅读块，复杂表格、音视频嵌入及行内富文本样式尚未完整支持，可打开原文查看。
-
-## 构建与安装
-
-需要 JDK 17、Android SDK Platform 35、Build Tools 35.0.0，以及可访问 Google Maven / Maven Central / Gradle 的网络。
-
-Windows 推荐步骤：
-
-1. 安装 Android Studio，在 SDK Manager 安装 Android SDK Platform 35 和 Build Tools 35.0.0。
-2. 设置 `JAVA_HOME` 为 JDK 17 路径；设置 `ANDROID_HOME` 为 Android SDK 路径，或在项目根目录创建 `local.properties`，写入 `sdk.dir=C:/Users/你的用户名/AppData/Local/Android/Sdk`。
-3. 在此目录的 PowerShell 执行：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\build.ps1
-```
-
-脚本下载固定版本 Gradle 8.11.1，检查官方 SHA-256，然后执行单元测试、Lint 和 APK 构建。它不会安装 JDK 或 Android SDK。也可以自行安装 Gradle 8.11.1 后执行：
-
-```text
-gradle testDebugUnitTest lintDebug assembleDebug
-```
-
-Android Studio 可直接打开此目录，已包含完整 Gradle Wrapper，Gradle JDK 选择 17。也可在 Windows 执行 `gradlew.bat testDebugUnitTest lintDebug assembleDebug`，macOS / Linux 执行 `sh gradlew testDebugUnitTest lintDebug assembleDebug`。Wrapper 固定为 Gradle 8.11.1，并校验发行包 SHA-256。
-
-成功后的安装包：`app/build/outputs/apk/debug/app-debug.apk`。用文件管理器安装，或连接开启 USB 调试的设备执行：
-
-```text
-adb install -r app/build/outputs/apk/debug/app-debug.apk
-```
-
-该 APK 为调试签名，仅供开发测试；上架前需独立正式签名、版本管理与发布审核。
-
-## GitHub 自动构建
-
-将本目录内容作为 GitHub 仓库根目录，随附的 `.github/workflows/android.yml` 会在推送、PR 或手动运行时执行测试、Lint 并生成 APK。在 Actions 的 `matters-debug-apk` artifact 中下载。仓库：https://github.com/ostrisand/matters-reader-android 。发布安装包见 Releases；Actions 的调试签名与发布附件可能不同。
 
 ## 接口与结构
 
@@ -68,15 +31,3 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 - `AccountTest.kt`、`NavigationLanguageTest.kt`：登录失败、过期恢复、离线退出、凭据传递、重定向保护、加密完整性、频道和繁简转换测试。
 
 API 使用官方 schema 中的 `channels`、`channel`、`search`、`article` 及 `viewer.recommendation`；频道支持 TopicChannel、CurationChannel 和 WritingChallenge。会话使用官方 `x-access-token` 请求头，仅发送到 API；接口请求禁止自动重定向。端点返回的权限或服务错误会显示重试状态，不使用虚构文章填充列表。收藏保存正文的当时版本，重新打开收藏不会自动更新远端内容。官网 `userLogout` 只清除该请求的 Cookie，不撤销其他设备会话；本机退出会删除密文、密钥和内存令牌。
-
-参考：
-
-- [Matters 官网](https://matters.town/)
-- [官方服务端及 GraphQL Schema](https://github.com/thematters/matters-server/blob/develop/schema.graphql)
-- [官方 Web 客户端](https://github.com/thematters/matters-web)
-- [Android Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3)
-- [AGP 8.9 兼容性](https://developer.android.com/build/releases/agp-8-9-0-release-notes)
-
-## 验证与安装
-
-正式签名构建及安装说明见 [发布说明](RELEASE-v1.0.0.md)。此前完成 23 项 Release 单元测试；本次重新构建并验证签名和版本信息。尚未完成真机及真实账户登录验收。
