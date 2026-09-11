@@ -1,6 +1,6 @@
 # Townee · Android
 
-当前版本 **1.0.2** 使用专用发布密钥签名并关闭调试模式。[正式签名构建说明](RELEASE-SIGNING.md)。旧调试版需卸载后安装，卸载会清除本地数据。正式签名不保证消除 Play Protect 提示。
+当前版本 **1.0.0** 使用专用发布密钥签名并关闭调试模式。[正式签名构建说明](RELEASE-SIGNING.md)。旧调试版需卸载后安装，卸载会清除本地数据。正式签名不保证消除 Play Protect 提示。
 
 
 基于 Matters 公开 GraphQL 接口实现的非官方 Android 阅读客户端。Kotlin、Jetpack Compose、Material Design 3，最低 Android 8.0（API 26）。
@@ -77,19 +77,6 @@ API 使用官方 schema 中的 `channels`、`channel`、`search`、`article` 及
 - [Android Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [AGP 8.9 兼容性](https://developer.android.com/build/releases/agp-8-9-0-release-notes)
 
-## 历史验证状态与后续验收
+## 验证与安装
 
-2026-09-11 已在项目工作目录配置 JDK 17、Gradle 8.11.1 和 Android SDK 35，完成实际构建。新版安装包为Release 附件中的 `Matters-1.0.0-debug.apk`，适用于 Android 8.0 及以上。沿用 0.1.0 的包名和调试签名，versionCode 升至 3，可直接覆盖安装。
-
-- `testDebugUnitTest lintDebug assembleDebug`：BUILD SUCCESSFUL。
-- 单元测试与 Lint 结果见`RELEASE-v1.0.0.md`。
-- APK：apksigner 签名验证通过，APK Signature Scheme v2，RSA 2048 位调试证书。
-- 生产接口：频道、精选、热文、最新、闲聊、活动文章、正文与搜索成功返回真实数据。
-- 登录／退出接口参数及字段通过生产 GraphQL 校验（使用 skip 指令未执行登录或退出操作）；匿名 viewer 返回空 ID，按未登录处理。
-- Android XML 和 PowerShell 构建脚本语法检查通过。
-
-尚未执行模拟器或真机 UI 验收，也未使用真实账号验证成功登录或 Android Keystore 的设备端持久化。登录行为和加密逻辑已使用模拟接口及 JVM 密码学测试覆盖，用户可在 APP 内输入自己的账号完成实际验收，无需向开发者提供密码。此 APK 是调试签名测试版，不是 Google Play 正式发行版。若默认调试签名目录受限，可自行生成调试密钥，并用 `-PdebugKeystore=密钥绝对路径` 指定，别名和密码使用 Android 默认调试值；不传该参数时使用 Android 标准调试签名配置。
-
-构建成功后应在手机及平板验证：频道和搜索分页、断网重试、快速切换频道、返回阅读列表、收藏后杀进程及离线打开、长文章与图片、200% 字号、TalkBack、深浅主题和旋转屏幕。当前导航页签通过 saved state 恢复，但进程被系统杀死后不恢复正在阅读的具体文章。
-
-本项目没有复用官方品牌图标，启动图标为独立绘制的小镇简笔画。文章内容与图片版权归各原作者。对外发布前请自行确认名称和图标的使用许可，并根据发布时的 Google Play 要求补齐隐私说明及政策适配。
+正式签名构建及安装说明见 [发布说明](RELEASE-v1.0.0.md)。此前完成 23 项 Release 单元测试；本次重新构建并验证签名和版本信息。尚未完成真机及真实账户登录验收。

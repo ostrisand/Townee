@@ -1,6 +1,6 @@
 # Release 签名构建
 
-从 v1.0.2 起，GitHub Release 的 APK 使用专用 RSA 3072 位发布证书，关闭调试模式。签名不表示 Google Play 审核通过，也不保证 Play Protect 不提示。
+当前 v1.0.0，GitHub Release 的 APK 使用专用 RSA 3072 位发布证书，关闭调试模式。签名不表示 Google Play 审核通过，也不保证 Play Protect 不提示。
 
 构建需要 JDK 17、Android SDK 35，以及以下环境变量：
 
