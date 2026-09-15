@@ -363,6 +363,10 @@ private fun ReadingScreen(state: ReaderState, model: ReaderModel) {
 private fun SettingsScreen(state: ReaderState, model: ReaderModel) {
     val context = LocalContext.current
     val account by model.accountState.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    var updateBusy by remember { mutableStateOf(false) }
+    var updateMessage by remember { mutableStateOf("") }
+    var update by remember { mutableStateOf<AppUpdate?>(null) }
     LazyColumn(contentPadding = PaddingValues(24.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         item {
             LocalizedText("你的阅读空间", style = MaterialTheme.typography.headlineSmall)
@@ -417,6 +421,30 @@ private fun SettingsScreen(state: ReaderState, model: ReaderModel) {
         }
         item {
             HorizontalDivider()
+            OutlinedCard(shape = RoundedCornerShape(24.dp)) {
+                Column(Modifier.padding(20.dp)) {
+                    LocalizedText("检查更新", style = MaterialTheme.typography.titleMedium)
+                    LocalizedText(if (update == null) updateMessage.ifBlank { "从 Townee GitHub Releases 检查最新版本。" } else "发现新版本 ${update!!.version}",
+                        Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    if (update != null) {
+                        if (update!!.notes.isNotBlank()) Text(update!!.notes.take(500), maxLines = 8, overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodySmall)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Button(onClick = { openWeb(context, update!!.apkUrl.ifBlank { update!!.pageUrl }) }) { LocalizedText("下载更新") }
+                            TextButton(onClick = { openWeb(context, update!!.pageUrl) }) { LocalizedText("查看发布页") }
+                        }
+                    }
+                    OutlinedButton(onClick = {
+                        updateBusy = true; updateMessage = "正在检查…"; update = null
+                        scope.launch {
+                            val result = UpdateChecker.latest()
+                            updateBusy = false
+                            result.onSuccess { found -> update = found; updateMessage = if (found == null) "当前已是最新版本" else "" }
+                                .onFailure { updateMessage = "检查失败：${it.message ?: "请稍后重试"}" }
+                        }
+                    }, enabled = !updateBusy) { LocalizedText(if (updateBusy) "检查中…" else "检查更新") }
+                }
+            }
             LocalizedText("Townee 1.0.0", Modifier.padding(top = 20.dp), style = MaterialTheme.typography.labelLarge)
             LocalizedText("非官方 Android 阅读客户端\n基于公开接口提供内容，文章版权归原作者所有。\n会话通过 Android Keystore 加密保存在本机，不保存密码。无分析与广告 SDK。卸载会清除会话与书架。",
                 Modifier.padding(top = 8.dp), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
