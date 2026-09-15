@@ -52,7 +52,7 @@ class MattersApi(
     private val fields = "id shortHash title summary cover createdAt author { displayName avatar }"
     private val connection = "pageInfo { endCursor hasNextPage } edges { node { $fields } }"
 
-    private suspend fun query(document: String, variables: JSONObject = JSONObject(),
+    internal suspend fun query(document: String, variables: JSONObject = JSONObject(),
         token: String? = sessionToken.get()): JSONObject = withContext(Dispatchers.IO) {
         val payload = JSONObject().put("query", document).put("variables", variables).toString()
         val request = Request.Builder().url(endpoint)

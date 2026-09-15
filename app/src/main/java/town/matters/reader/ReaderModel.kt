@@ -27,6 +27,22 @@ class ReaderModel(app: Application) : AndroidViewModel(app) {
     private val accountController = AccountController(api, EncryptedSessionStore(app))
     val accountState = accountController.ui
     private val prefs = app.getSharedPreferences("reader", 0)
+    private val writingPrefs = app.getSharedPreferences("writing", 0)
+    val writing = WritingController(api, { writingPrefs.getString(it, null) }, { key, value ->
+        check(writingPrefs.edit().putString(key, value).commit()) { "保存失败" }
+    })
+    fun sendWriting(publish: Boolean) {
+        val owner = accountState.value.account?.id ?: return
+        val token = api.currentSessionToken() ?: return
+        if (!accountState.value.verified || writing.ui.value.owner != owner) return
+        viewModelScope.launch { writing.send(publish, token) }
+    }
+    fun refreshWriting() {
+        val owner = accountState.value.account?.id ?: return
+        val token = api.currentSessionToken() ?: return
+        if (!accountState.value.verified || writing.ui.value.owner != owner) return
+        viewModelScope.launch { writing.refresh(token) }
+    }
     private val state = MutableStateFlow(ReaderState(
         saved = runCatching {
             val list = JSONArray(prefs.getString("saved", "[]"))

@@ -134,7 +134,7 @@ private fun ReaderApp(state: ReaderState, model: ReaderModel) {
                             navigationIcon = { IconButton(onClick = { scope.launch { drawer.open() } }) { LocalizedIcon(Icons.Outlined.Menu, "打开频道菜单") } },
                             actions = {
                                 IconButton(onClick = { tab = 1 }) { LocalizedIcon(Icons.Outlined.Search, "搜索") }
-                                IconButton(onClick = { openWeb(context, "https://matters.town/me/drafts/new") }) { LocalizedIcon(Icons.Outlined.AddBox, "在网页写作") }
+                                IconButton(onClick = { tab = 4 }) { LocalizedIcon(Icons.Outlined.AddBox, "写文章") }
                                 IconButton(onClick = { openWeb(context, "https://matters.town/me/notifications") }) { LocalizedIcon(Icons.Outlined.Notifications, "在网页查看通知") }
                                 IconButton(onClick = { tab = 3 }) {
                                     val avatar = account.account?.avatar.orEmpty()
@@ -144,7 +144,7 @@ private fun ReaderApp(state: ReaderState, model: ReaderModel) {
                             })
                         Row(Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                             TextButton(onClick = { scope.launch { drawer.open() } }, modifier = Modifier.weight(1f)) {
-                                LocalizedText(if (tab == 0) channelTitle(state) else listOf("首页", "搜索", "书架", "我的")[tab],
+                                LocalizedText(if (tab == 0) channelTitle(state) else listOf("首页", "搜索", "书架", "我的", "写文章")[tab],
                                     Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 LocalizedIcon(Icons.Outlined.ExpandMore, null)
                             }
@@ -162,6 +162,7 @@ private fun ReaderApp(state: ReaderState, model: ReaderModel) {
                                     1 -> SearchScreen(state, model)
                                     2 -> LibraryScreen(state, model)
                                     3 -> SettingsScreen(state, model)
+                                    4 -> WritingScreen(model) { tab = 3 }
                                 }
                             }
                         }
@@ -444,7 +445,7 @@ private fun ErrorPanel(message: String, onRetry: () -> Unit) {
     }
 }
 
-private fun openWeb(context: Context, url: String) {
+internal fun openWeb(context: Context, url: String) {
     val uri = Uri.parse(url)
     if (uri.scheme !in listOf("https", "http")) return
     runCatching { CustomTabsIntent.Builder().setShowTitle(true).build().launchUrl(context, uri) }
